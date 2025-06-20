@@ -1,0 +1,6 @@
+steps:
+  - id: TST
+    name: alpine
+    entrypoint: echo
+    args:
+      - 'hello World'

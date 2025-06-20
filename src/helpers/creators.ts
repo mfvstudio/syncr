@@ -1,14 +1,20 @@
 import { Construct } from "constructs";
-import { CloudBuildStack } from "../stacks/CloudBuild";
-import { RepositoryStack } from "../stacks/Repository";
+import { AppConfig } from "../appConfigs";
+import { ComputeStack } from "../stacks/ComputeStack";
 
 
 export function CreateSyncrStacks(app: Construct) {
-    const repoStack = new RepositoryStack(app, {
-        name: 'SyncrRepositoryStack'
+    const projectId = 'infinite-pad-463416-d4';
+    
+    const SyncrConfig: AppConfig = {
+        appName: 'Syncr',
+        projectId,
+        gitHubUser: 'mfvstudio',
+        region: 'us-west1',
+        gitHubInstallationId: 72256958,
+        remoteURI: 'https://github.com/mfvstudio/syncr.git',
+    };
+    new ComputeStack(app, {
+        config: SyncrConfig
     });
-    const buildStack = new CloudBuildStack(app, {
-        name: 'SyncrBuildStack'
-    });
-    buildStack.dependsOn(repoStack);
 }
