@@ -8,7 +8,7 @@
   "scripts": {
     "get": "cdktf get",
     "build": "tsc",
-    "synth": "./loadVars.sh && cdktf synth ./src",
+    "synth": "cdktf synth ./src",
     "compile": "tsc --pretty",
     "watch": "tsc -w",
     "test": "jest",

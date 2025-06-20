@@ -9,7 +9,7 @@ import { SecretManagerSecretVersion } from "@cdktf/provider-google/lib/secret-ma
 import { GetEnvStringOrFail } from "../helpers/data";
 import { Cloudbuildv2Connection } from "@cdktf/provider-google/lib/cloudbuildv2-connection";
 import { SecretManagerSecretIamMember } from '@cdktf/provider-google/lib/secret-manager-secret-iam-member';
-
+import { Cloudbuildv2Repository } from "@cdktf/provider-google/lib/cloudbuildv2-repository";
 
 export interface RepositoryStackProps {
     name: string
@@ -46,7 +46,7 @@ export class RepositoryStack extends TerraformStack {
             member: `serviceAccount:service-${project.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com`,
             dependsOn: [sms]
         })
-        new Cloudbuildv2Connection(this, 'github-connection', {
+        const gitConnection = new Cloudbuildv2Connection(this, 'github-connection', {
             project: project.projectId,
             location: SyncrConfig.region,
             name: 'githubConnection',
@@ -58,6 +58,14 @@ export class RepositoryStack extends TerraformStack {
             },
             dependsOn: [scrtPolicy, scrtV]
         });
+        new Cloudbuildv2Repository(this, 'SyncrRepoConnection', {
+            project: project.id,
+            location: SyncrConfig.region,
+            name: 'syncr',
+            parentConnection: gitConnection.name,
+            remoteUri: SyncrConfig.remoteURI,
+            dependsOn: [gitConnection]
+        })
         this.dependsOn(enableApis as TerraformStack);   
     }
 }

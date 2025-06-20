@@ -40,15 +40,16 @@ export class CloudBuildStack extends TerraformStack {
         ])
         new CloudbuildTrigger(this, "SyncrBuildTrigger", {
             name: `${props.name}-BuildTrigger`,
+            location: SyncrConfig.region,
             description: 'A trigger for Github repo',
-            github: {
-                owner: SyncrConfig.gitHubUser,
-                name: 'syncr',
+            repositoryEventConfig: {
+                repository: `projects/${project.id}/locations/${SyncrConfig.region}/connections/githubConnection/repositories/syncr`,
                 push: {
-                    branch: 'main'
+                    branch: '^main$'
                 }
             },
-            filename: './cloudbuild.yaml'
+            filename: 'cloudbuild.yaml',
+            includeBuildLogs: 'INCLUDE_BUILD_LOGS_WITH_STATUS'
         })
         this.dependsOn(enableApis as TerraformStack);
     }
