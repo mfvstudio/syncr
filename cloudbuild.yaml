@@ -1,4 +1,6 @@
 steps:
-  - name: 'alpine'
-    entrypoint: 'echo'
-    args: ['Hello, Cloud Build!']
+  - id: TST
+    name: alpine
+    entrypoint: echo
+    args:
+      - 'hello World'

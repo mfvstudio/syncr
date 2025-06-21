@@ -5,3 +5,4 @@ export const SyncrConfig = {
     gitHubAppInstallationId: 72256958,
     remoteURI: 'https://github.com/mfvstudio/syncr.git'
 }
+
