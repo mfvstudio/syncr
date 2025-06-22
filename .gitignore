@@ -13,3 +13,4 @@ google.json
 .env
 loadVars.sh
 .DS_Store
+logs

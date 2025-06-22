@@ -10,6 +10,8 @@ import { SecretManagerSecretIamMember } from "@cdktf/provider-google/lib/secret-
 import { SecretManagerSecretVersion } from "@cdktf/provider-google/lib/secret-manager-secret-version";
 import { GetEnvStringOrFail } from "../helpers/data";
 import { DataGoogleProject } from "@cdktf/provider-google/lib/data-google-project";
+import { StorageBucket } from "@cdktf/provider-google/lib/storage-bucket";
+import { StorageBucketIamMember } from "@cdktf/provider-google/lib/storage-bucket-iam-member";
 
 export interface CloudBuildConstructProps {
     config: AppConfig;
@@ -39,6 +41,11 @@ export class CloudBuildConstruct extends Construct {
         new ProjectIamMember(this, 'cloudbuild-service-user', {
             project: config.projectId,
             role: 'roles/iam.serviceAccountUser',
+            member: `serviceAccount:${props.serviceAccount}`
+        });
+        new ProjectIamMember(this, 'cloudbuild-connection-user', {
+            project: config.projectId,
+            role: 'roles/cloudbuild.connectionAdmin',
             member: `serviceAccount:${props.serviceAccount}`
         });
         const sms = new SecretManagerSecret(this, 'github_super_secret_token', {
@@ -78,11 +85,19 @@ export class CloudBuildConstruct extends Construct {
             remoteUri: config.remoteURI,
             dependsOn: [gitConnection]
         })
-        // try changing service account
-        new CloudbuildTrigger(this, "SyncrBuildTrigger", {
-            name: `${config.appName}-BuildTrigger`,
+        const logsBucket = new StorageBucket(this, 'CloudBuildLogsBucket', {
+            name: `${config.appName}-CloudBuildLogsBucket`,
             location: config.region,
-            description: 'A trigger for Github repo',
+            uniformBucketLevelAccess: true,
+            forceDestroy: false
+        })
+        new StorageBucketIamMember(this, 'CloudBuildLogsBucketPermission', {
+            bucket: logsBucket.name,
+            role: 'roles/storage.objectCreator',
+            member: `serviceAccount:${props.serviceAccount}`
+        })
+        new CloudbuildTrigger(this, "SyncrBuildTrigger", {
+            location: config.region,
             repositoryEventConfig: {
                 repository: cbRepo.id,
                 push: {
@@ -90,8 +105,7 @@ export class CloudBuildConstruct extends Construct {
                 }
             },
             filename: 'cloudbuild.yaml',
-            includeBuildLogs: 'INCLUDE_BUILD_LOGS_WITH_STATUS',
-            dependsOn: [cbRepo]
+            dependsOn: [cbRepo, logsBucket]
         })
     }
 }
