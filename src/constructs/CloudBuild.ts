@@ -86,7 +86,7 @@ export class CloudBuildConstruct extends Construct {
             dependsOn: [gitConnection]
         })
         const logsBucket = new StorageBucket(this, 'CloudBuildLogsBucket', {
-            name: `${config.appName}-CloudBuildLogsBucket`,
+            name: `${config.appName.toLowerCase()}-CloudBuildLogsBucket`,
             location: config.region,
             uniformBucketLevelAccess: true,
             forceDestroy: false
