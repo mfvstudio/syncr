@@ -1,6 +1,6 @@
 steps:
   - id: TST
-    logsBucket: 'gs://syncr-CloudBuildLogsBucket'
+    logsBucket: 'gs://syncr-cloud_build_logs_bucket'
     name: alpine
     entrypoint: echo
     args:
