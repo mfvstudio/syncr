@@ -7,3 +7,7 @@ export interface AppConfig {
     gitHubInstallationId: number;
     remoteURI: string;
 }
+
+export enum Locations {
+    US_WEST_2 = 'us-west2'
+}
