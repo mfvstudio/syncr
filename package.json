@@ -20,7 +20,7 @@
     "load": "./loadVars.sh",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint ./src/*/** --fix",
-    "deploy": "cdktf deploy Syncr-ComputeStack "
+    "deploy": "cdktf deploy Syncr-StorageStack"
   },
   "engines": {
     "node": ">=20.9"
