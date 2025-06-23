@@ -4,6 +4,8 @@ import { Construct } from "constructs";
 import { GoogleProvider } from "@cdktf/provider-google/lib/provider";
 import { CloudBuildConstruct } from "../constructs/CloudBuild";
 import { DataGoogleProject } from "@cdktf/provider-google/lib/data-google-project";
+import { ArtifactRegistry } from "../constructs/ArtifactRegistry";
+import { CloudRunConstruct } from "../constructs/CloudRun";
 
 export interface ComputeStackProps {
     config: AppConfig;
@@ -25,6 +27,16 @@ export class ComputeStack extends TerraformStack {
             config,
             project,
             serviceAccount
-        })
+        });
+        const ar = new ArtifactRegistry(this, {
+            config,
+            serviceAccount
+        });
+        const cr = new CloudRunConstruct(this, {
+            config,
+            project,
+            serviceAccount
+        });
+        ar.node.addDependency(cr);
     }
 }

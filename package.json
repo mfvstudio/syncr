@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "get": "cdktf get",
+    "begin": "npm run get && npm install",
     "build": "tsc",
     "synth": "cdktf synth ./src",
     "compile": "tsc --pretty",
@@ -18,7 +19,8 @@
     "upgrade:next": "npm i cdktf@next cdktf-cli@next",
     "load": "./loadVars.sh",
     "lint": "npx eslint .",
-    "lint:fix": "npx eslint ./src/*/** --fix"
+    "lint:fix": "npx eslint ./src/*/** --fix",
+    "deploy": "cdktf deploy Syncr-ComputeStack "
   },
   "engines": {
     "node": ">=20.9"

@@ -1,7 +1,6 @@
 import { AppConfig } from "../appConfigs";
-import { Construct } from "constructs"
+import { Construct } from "constructs";
 import { ProjectIamMember } from "@cdktf/provider-google/lib/project-iam-member";
-import { CloudbuildTrigger } from "@cdktf/provider-google/lib/cloudbuild-trigger";
 import { ProjectService } from "@cdktf/provider-google/lib/project-service";
 import { Cloudbuildv2Connection } from "@cdktf/provider-google/lib/cloudbuildv2-connection";
 import { Cloudbuildv2Repository } from "@cdktf/provider-google/lib/cloudbuildv2-repository";
@@ -78,7 +77,7 @@ export class CloudBuildConstruct extends Construct {
             },
             dependsOn: [scrtPolicy, scrtV]
         });
-        const cbRepo = new Cloudbuildv2Repository(this, 'SyncrRepoConnection', {
+        new Cloudbuildv2Repository(this, 'SyncrRepoConnection', {
             location: config.region,
             name: 'syncr',
             parentConnection: gitConnection.id,
@@ -96,6 +95,7 @@ export class CloudBuildConstruct extends Construct {
             role: 'roles/storage.objectCreator',
             member: `serviceAccount:${props.serviceAccount}`
         })
+        /* Trigger is busted :/
         new CloudbuildTrigger(this, "SyncrBuildTrigger", {
             location: config.region,
             repositoryEventConfig: {
@@ -107,5 +107,6 @@ export class CloudBuildConstruct extends Construct {
             filename: 'cloudbuild.yaml',
             dependsOn: [cbRepo, logsBucket]
         })
+        */
     }
 }

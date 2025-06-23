@@ -14,7 +14,8 @@ function CreateSyncrApp() {
     region: Locations.US_WEST_2,
     gitHubInstallationId: 72256958,
     remoteURI: 'https://github.com/mfvstudio/syncr.git',
-};
+    artifactRepository: `syncr-artifact-registry`
+ };
   CreateSyncrStacks(app, SyncrConfig);
   app.synth();
 }

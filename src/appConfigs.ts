@@ -6,6 +6,7 @@ export interface AppConfig {
     region: string;
     gitHubInstallationId: number;
     remoteURI: string;
+    artifactRepository: string;
 }
 
 export enum Locations {
